@@ -1,0 +1,35 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres-image'
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    networks:
+      network_1:
+        ipv4_address: 123.45.0.2
+  
+  api_rates:
+    image: 'api_rates'
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - "postgres"
+
+    networks:
+      network_1:
+        ipv4_address: 123.45.0.3
+
+volumes:
+  database-data: {}
+
+networks:
+  network_1:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 123.45.0.0/17
